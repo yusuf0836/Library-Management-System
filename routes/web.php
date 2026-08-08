@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PublisherController;
 
 Route::redirect('/', '/login');
 
@@ -23,4 +24,7 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
     Route::resource('authors', AuthorController::class)
         ->except(['show']);
+
+    Route::resource('publishers', PublisherController::class)
+    ->except(['show']);
 });
