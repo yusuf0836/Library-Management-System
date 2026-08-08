@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
@@ -19,5 +19,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::resource('categories', CategoryController::class)
+        ->except(['show']);
+
+    Route::resource('authors', AuthorController::class)
         ->except(['show']);
 });
