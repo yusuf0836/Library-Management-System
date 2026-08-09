@@ -10,6 +10,8 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookCopyController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\BookIssueController;
+use App\Http\Controllers\FineController;
+use App\Http\Controllers\MemberBorrowingController;
 
 Route::redirect('/', '/login');
 
@@ -54,4 +56,15 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
     Route::post('book-issues/{bookIssue}/return', [BookIssueController::class, 'returnBook'])
         ->name('book-issues.return');
+
+    Route::get('fines', [FineController::class, 'index'])
+    ->name('fines.index');
+
+    Route::post('fines/{fine}/pay', [FineController::class, 'pay'])
+        ->name('fines.pay');
+});
+
+Route::middleware(['auth', 'role:member'])->group(function () {
+    Route::get('my-borrowings', [MemberBorrowingController::class, 'index'])
+        ->name('member.borrowings');
 });

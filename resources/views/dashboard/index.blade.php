@@ -95,6 +95,24 @@
                 <span class="role">{{ ucfirst(auth()->user()->role) }}</span>
             </p>
 
+            @if (auth()->user()->role === 'member')
+                <a
+                    href="{{ route('member.borrowings') }}"
+                    style="
+                        display:inline-block;
+                        margin-top:18px;
+                        padding:10px 14px;
+                        border-radius:7px;
+                        background:#1d4ed8;
+                        color:white;
+                        font-weight:bold;
+                        text-decoration:none;
+                    "
+                >
+                    View My Borrowing History
+                </a>
+            @endif
+
             <p class="notice">
                 Authentication and role setup is complete. Book, member,
                 issue-return, and fine management modules will be added in the next steps.
