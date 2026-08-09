@@ -12,6 +12,7 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\BookIssueController;
 use App\Http\Controllers\FineController;
 use App\Http\Controllers\MemberBorrowingController;
+use App\Http\Controllers\ReportController;
 
 Route::redirect('/', '/login');
 
@@ -62,6 +63,9 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
     Route::post('fines/{fine}/pay', [FineController::class, 'pay'])
         ->name('fines.pay');
+
+    Route::get('reports/overdue', [ReportController::class, 'overdue'])
+        ->name('reports.overdue');
 });
 
 Route::middleware(['auth', 'role:member'])->group(function () {
