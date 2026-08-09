@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookCopyController;
 
 Route::redirect('/', '/login');
 
@@ -31,5 +32,9 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     ->except(['show']);
 
     Route::resource('books', BookController::class)
+    ->except(['show']);
+
+    Route::resource('book-copies', BookCopyController::class)
+    ->parameters(['book-copies' => 'bookCopy'])
     ->except(['show']);
 });
