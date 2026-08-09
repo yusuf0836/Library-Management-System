@@ -9,6 +9,7 @@ use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookCopyController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\BookIssueController;
 
 Route::redirect('/', '/login');
 
@@ -41,4 +42,16 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
     Route::resource('members', MemberController::class)
     ->except(['show']);
+
+    Route::get('book-issues', [BookIssueController::class, 'index'])
+    ->name('book-issues.index');
+
+    Route::get('book-issues/create', [BookIssueController::class, 'create'])
+        ->name('book-issues.create');
+
+    Route::post('book-issues', [BookIssueController::class, 'store'])
+        ->name('book-issues.store');
+
+    Route::post('book-issues/{bookIssue}/return', [BookIssueController::class, 'returnBook'])
+        ->name('book-issues.return');
 });
