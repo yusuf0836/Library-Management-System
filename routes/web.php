@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookCopyController;
+use App\Http\Controllers\MemberController;
 
 Route::redirect('/', '/login');
 
@@ -36,5 +37,8 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
     Route::resource('book-copies', BookCopyController::class)
     ->parameters(['book-copies' => 'bookCopy'])
+    ->except(['show']);
+
+    Route::resource('members', MemberController::class)
     ->except(['show']);
 });
