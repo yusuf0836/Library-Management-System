@@ -65,6 +65,10 @@
                     ({{ ucfirst(auth()->user()->role) }})
                 </span>
 
+                <a class="btn btn-outline-light btn-sm" href="{{ route('profile.edit') }}">
+                    Profile
+                </a>
+
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
 
