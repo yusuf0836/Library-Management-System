@@ -9,10 +9,10 @@ use App\Models\Member;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Setting;
 
 class BookIssueController extends Controller
 {
-    private const FINE_PER_DAY = 5;
 
     public function index(Request $request)
     {
@@ -42,8 +42,9 @@ class BookIssueController extends Controller
             ->latest()
             ->paginate(10)
             ->withQueryString();
+            $finePerDay = (float) Setting::getValue('fine_per_day', 5);
 
-        return view('book-issues.index', compact('issues', 'search'));
+        return view('book-issues.index', compact('issues', 'search', 'finePerDay'));
     }
 
     public function create()
@@ -58,7 +59,15 @@ class BookIssueController extends Controller
             ->orderBy('accession_number')
             ->get();
 
-        return view('book-issues.create', compact('members', 'copies'));
+        $defaultBorrowingDays = (int) Setting::getValue(
+            'default_borrowing_days',
+            14
+        );
+
+        return view(
+            'book-issues.create',
+            compact('members', 'copies', 'defaultBorrowingDays')
+        );
     }
 
     public function store(Request $request)
@@ -131,7 +140,9 @@ class BookIssueController extends Controller
                 ? $dueAt->diffInDays($returnedAt)
                 : 0;
 
-            $fineAmount = $lateDays * self::FINE_PER_DAY;
+            $finePerDay = (float) Setting::getValue('fine_per_day', 5);
+
+            $fineAmount = $lateDays * $finePerDay;
 
             $bookIssue->update([
                 'returned_at' => $returnedAt,
@@ -150,7 +161,7 @@ class BookIssueController extends Controller
                         'amount' => $fineAmount,
                         'paid_amount' => 0,
                         'status' => 'unpaid',
-                        'notes' => $lateDays . ' overdue day(s) × ৳' . self::FINE_PER_DAY,
+                        'notes' => $lateDays . ' overdue day(s) × ৳' . $finePerDay,
                     ]
                 );
             }

@@ -14,6 +14,7 @@ use App\Http\Controllers\FineController;
 use App\Http\Controllers\MemberBorrowingController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 
 Route::redirect('/', '/login');
 
@@ -25,6 +26,14 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/settings', [SettingsController::class, 'index'])
+        ->name('settings.index');
+
+    Route::put('/settings', [SettingsController::class, 'update'])
+        ->name('settings.update');
 });
 
 Route::middleware(['auth', 'role:admin,librarian'])->group(function () {

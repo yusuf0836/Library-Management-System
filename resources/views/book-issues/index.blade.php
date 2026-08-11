@@ -188,7 +188,7 @@
                                                             ></textarea>
 
                                                             <small class="text-muted d-block mt-2">
-                                                                Fine rate: ৳5 per overdue day.
+                                                                Fine rate: ৳{{ number_format($finePerDay, 2) }} per overdue day.
                                                             </small>
                                                         </div>
 

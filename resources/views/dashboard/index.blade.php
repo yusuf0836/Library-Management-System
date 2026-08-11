@@ -353,6 +353,21 @@
                         </a>
                     </div>
                 </div>
+
+                @if (auth()->user()->role === 'admin')
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card nav-card h-100 shadow-sm">
+                            <a href="{{ route('settings.index') }}">
+                                <div class="card-body">
+                                    <h5>⚙️ Settings</h5>
+                                    <p class="text-muted mb-0 small">
+                                        Library rules and system settings.
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             {{-- Recent Issues --}}

@@ -128,7 +128,7 @@
                                 type="date"
                                 name="due_at"
                                 class="form-control @error('due_at') is-invalid @enderror"
-                                value="{{ old('due_at', date('Y-m-d', strtotime('+14 days'))) }}"
+                                value="{{ old('due_at', now()->addDays($defaultBorrowingDays)->format('Y-m-d')) }}"
                                 required
                             >
 
