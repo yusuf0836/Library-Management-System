@@ -48,6 +48,16 @@
             <div class="success">{{ session('success') }}</div>
         @endif
 
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        <div style="margin-bottom:18px;padding:12px;border-radius:8px;background:#fee2e2;color:#991b1b;">
+            {{ session('error') }}
+        </div>
+
         <section class="card">
             @if ($publishers->count())
                 <table>

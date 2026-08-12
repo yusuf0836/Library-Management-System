@@ -64,6 +64,12 @@ class PublisherController extends Controller
 
     public function destroy(Publisher $publisher)
     {
+        if ($publisher->books()->exists()) {
+            return redirect()
+                ->route('publishers.index')
+                ->with('error', 'This publisher cannot be deleted because it is assigned to one or more books.');
+        }
+
         $publisher->delete();
 
         return redirect()

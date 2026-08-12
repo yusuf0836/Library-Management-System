@@ -107,6 +107,12 @@ class BookCopyController extends Controller
                 ->with('error', 'An issued book copy cannot be deleted.');
         }
 
+        if ($bookCopy->issues()->exists()) {
+            return redirect()
+                ->route('book-copies.index')
+                ->with('error', 'This book copy cannot be deleted because it has borrowing history.');
+        }
+
         $bookCopy->delete();
 
         return redirect()

@@ -136,6 +136,12 @@ class MemberController extends Controller
 
     public function destroy(Member $member)
     {
+        if ($member->issues()->exists()) {
+            return redirect()
+                ->route('members.index')
+                ->with('error', 'This member cannot be deleted because the member has borrowing history.');
+        }
+
         $member->user->delete();
 
         return redirect()

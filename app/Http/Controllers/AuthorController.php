@@ -78,6 +78,12 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
+        if ($author->books()->exists()) {
+            return redirect()
+                ->route('authors.index')
+                ->with('error', 'This author cannot be deleted because it is linked to one or more books.');
+        }
+
         $author->delete();
 
         return redirect()

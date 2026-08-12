@@ -78,6 +78,12 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if ($category->books()->exists()) {
+            return redirect()
+                ->route('categories.index')
+                ->with('error', 'This category cannot be deleted because it is assigned to one or more books.');
+        }
+
         $category->delete();
 
         return redirect()

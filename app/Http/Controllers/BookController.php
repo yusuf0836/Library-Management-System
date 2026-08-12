@@ -171,6 +171,14 @@ class BookController extends Controller
 
     public function destroy(Book $book)
     {
+        if ($book->copies()->exists()) {
+            return redirect()
+                ->route('books.index')
+                ->with('error', 'This book cannot be deleted because it has one or more physical copies.');
+        }
+
+        $book->authors()->detach();
+
         $book->delete();
 
         return redirect()

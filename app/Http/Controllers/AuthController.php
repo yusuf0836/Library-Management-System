@@ -37,6 +37,25 @@ class AuthController extends Controller
                 ->onlyInput('email');
         }
 
+        $user = Auth::user();
+
+        /*
+        * Prevent inactive members from logging in.
+        */
+        if ($user->role === 'member') {
+            $member = $user->member;
+
+            if (! $member || ! $member->is_active) {
+                Auth::logout();
+
+                return back()
+                    ->withErrors([
+                        'email' => 'Your library membership is inactive. Please contact the librarian.',
+                    ])
+                    ->onlyInput('email');
+            }
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard'));
