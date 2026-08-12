@@ -23,7 +23,11 @@
                 <h2 class="mb-1">Edit Book</h2>
                 <p class="text-muted mb-4">Update the selected book information.</p>
 
-                <form action="{{ route('books.update', $book) }}" method="POST">
+                <form
+                    action="{{ route('books.update', $book) }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
                     @csrf
                     @method('PUT')
 
@@ -164,6 +168,39 @@
                             >
 
                             @error('publication_year')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="cover_image" class="form-label">
+                                Update Book Cover
+                            </label>
+
+                            @if ($book->cover_image)
+                                <div class="mb-2">
+                                    <img
+                                        src="{{ asset('storage/' . $book->cover_image) }}"
+                                        alt="{{ $book->title }}"
+                                        style="width: 90px; height: 120px; object-fit: cover;"
+                                        class="border rounded"
+                                    >
+                                </div>
+                            @endif
+
+                            <input
+                                id="cover_image"
+                                type="file"
+                                name="cover_image"
+                                class="form-control @error('cover_image') is-invalid @enderror"
+                                accept=".jpg,.jpeg,.png,.webp"
+                            >
+
+                            <small class="text-muted">
+                                Leave empty to keep the current cover image.
+                            </small>
+
+                            @error('cover_image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

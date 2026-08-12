@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Publisher;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -50,7 +51,15 @@ class BookController extends Controller
             'description' => ['nullable', 'string', 'max:3000'],
             'authors' => ['required', 'array', 'min:1'],
             'authors.*' => ['exists:authors,id'],
+            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        $coverImage = null;
+
+            if ($request->hasFile('cover_image')) {
+                $coverImage = $request->file('cover_image')
+                    ->store('book-covers', 'public');
+            }
 
         $book = Book::create([
             'title' => $validated['title'],
@@ -60,6 +69,7 @@ class BookController extends Controller
             'edition' => $validated['edition'] ?? null,
             'publication_year' => $validated['publication_year'] ?? null,
             'description' => $validated['description'] ?? null,
+            'cover_image' => $coverImage,
         ]);
 
         $book->authors()->sync($validated['authors']);
@@ -97,7 +107,19 @@ class BookController extends Controller
             'description' => ['nullable', 'string', 'max:3000'],
             'authors' => ['required', 'array', 'min:1'],
             'authors.*' => ['exists:authors,id'],
+            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        $coverImage = $book->cover_image;
+
+            if ($request->hasFile('cover_image')) {
+                if ($book->cover_image) {
+                    Storage::disk('public')->delete($book->cover_image);
+                }
+
+                $coverImage = $request->file('cover_image')
+                    ->store('book-covers', 'public');
+            }
 
         $book->update([
             'title' => $validated['title'],
@@ -107,6 +129,7 @@ class BookController extends Controller
             'edition' => $validated['edition'] ?? null,
             'publication_year' => $validated['publication_year'] ?? null,
             'description' => $validated['description'] ?? null,
+            'cover_image' => $coverImage,
         ]);
 
         $book->authors()->sync($validated['authors']);
@@ -114,6 +137,36 @@ class BookController extends Controller
         return redirect()
             ->route('books.index')
             ->with('success', 'Book updated successfully.');
+    }
+
+    public function show(Book $book)
+    {
+        $book->load([
+            'category',
+            'publisher',
+            'authors',
+            'copies',
+        ]);
+
+        $totalCopies = $book->copies->count();
+
+        $availableCopies = $book->copies
+            ->where('status', 'available')
+            ->count();
+
+        $issuedCopies = $book->copies
+            ->where('status', 'issued')
+            ->count();
+
+        return view(
+            'books.show',
+            compact(
+                'book',
+                'totalCopies',
+                'availableCopies',
+                'issuedCopies'
+            )
+        );
     }
 
     public function destroy(Book $book)

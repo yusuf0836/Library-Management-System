@@ -46,8 +46,7 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::resource('publishers', PublisherController::class)
     ->except(['show']);
 
-    Route::resource('books', BookController::class)
-    ->except(['show']);
+    Route::resource('books', BookController::class);
 
     Route::resource('book-copies', BookCopyController::class)
     ->parameters(['book-copies' => 'bookCopy'])

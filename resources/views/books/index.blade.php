@@ -99,6 +99,12 @@
 
                                 <td class="text-nowrap">
                                     <a
+                                        class="btn btn-sm btn-outline-dark"
+                                        href="{{ route('books.show', $book) }}"
+                                    >
+                                        View
+                                    </a>
+                                    <a
                                         class="btn btn-sm btn-outline-primary"
                                         href="{{ route('books.edit', $book) }}"
                                     >

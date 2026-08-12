@@ -20,6 +20,7 @@ class Book extends Model
         'edition',
         'publication_year',
         'description',
+        'cover_image',
     ];
 
     public function category(): BelongsTo

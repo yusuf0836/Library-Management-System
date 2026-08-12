@@ -23,7 +23,11 @@
                 <h2 class="mb-1">Add New Book</h2>
                 <p class="text-muted mb-4">Enter the book information below.</p>
 
-                <form action="{{ route('books.store') }}" method="POST">
+                <form
+                    action="{{ route('books.store') }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
                     @csrf
 
                     <div class="row g-3">
@@ -158,6 +162,28 @@
                             >
 
                             @error('publication_year')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="cover_image" class="form-label">
+                                Book Cover Image
+                            </label>
+
+                            <input
+                                id="cover_image"
+                                type="file"
+                                name="cover_image"
+                                class="form-control @error('cover_image') is-invalid @enderror"
+                                accept=".jpg,.jpeg,.png,.webp"
+                            >
+
+                            <small class="text-muted">
+                                JPG, JPEG, PNG, or WEBP. Maximum size: 2 MB.
+                            </small>
+
+                            @error('cover_image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
