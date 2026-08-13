@@ -49,19 +49,72 @@
 
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
-                <form method="GET" action="{{ route('books.index') }}" class="row g-2">
-                    <div class="col-md-10">
+                <form method="GET" action="{{ route('books.index') }}" class="row g-3">
+                    <div class="col-md-4">
                         <input
                             type="text"
                             name="search"
                             class="form-control"
                             value="{{ $search }}"
-                            placeholder="Search by book title or ISBN..."
+                            placeholder="Search by title or ISBN..."
                         >
                     </div>
 
-                    <div class="col-md-2 d-grid">
-                        <button class="btn btn-dark" type="submit">Search</button>
+                    <div class="col-md-2">
+                        <select name="category_id" class="form-select">
+                            <option value="">All Categories</option>
+
+                            @foreach ($categories as $category)
+                                <option
+                                    value="{{ $category->id }}"
+                                    @selected($categoryId == $category->id)
+                                >
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <select name="author_id" class="form-select">
+                            <option value="">All Authors</option>
+
+                            @foreach ($authors as $author)
+                                <option
+                                    value="{{ $author->id }}"
+                                    @selected($authorId == $author->id)
+                                >
+                                    {{ $author->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <select name="publisher_id" class="form-select">
+                            <option value="">All Publishers</option>
+
+                            @foreach ($publishers as $publisher)
+                                <option
+                                    value="{{ $publisher->id }}"
+                                    @selected($publisherId == $publisher->id)
+                                >
+                                    {{ $publisher->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-1 d-grid">
+                        <button class="btn btn-dark" type="submit">
+                            Filter
+                        </button>
+                    </div>
+
+                    <div class="col-md-1 d-grid">
+                        <a class="btn btn-outline-secondary" href="{{ route('books.index') }}">
+                            Clear
+                        </a>
                     </div>
                 </form>
             </div>

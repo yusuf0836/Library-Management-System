@@ -50,18 +50,47 @@
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
                 <form method="GET" action="{{ route('book-copies.index') }}" class="row g-2">
-                    <div class="col-md-10">
+                    <div class="col-md-7">
                         <input
                             type="text"
                             name="search"
                             class="form-control"
                             value="{{ $search }}"
-                            placeholder="Search by book title, accession number, or shelf..."
+                            placeholder="Search book title, accession number, or shelf..."
                         >
                     </div>
 
-                    <div class="col-md-2 d-grid">
-                        <button class="btn btn-dark" type="submit">Search</button>
+                    <div class="col-md-3">
+                        <select name="status" class="form-select">
+                            <option value="">All Status</option>
+                            <option value="available" @selected($status === 'available')>
+                                Available
+                            </option>
+                            <option value="issued" @selected($status === 'issued')>
+                                Issued
+                            </option>
+                            <option value="reserved" @selected($status === 'reserved')>
+                                Reserved
+                            </option>
+                            <option value="lost" @selected($status === 'lost')>
+                                Lost
+                            </option>
+                            <option value="damaged" @selected($status === 'damaged')>
+                                Damaged
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-1 d-grid">
+                        <button class="btn btn-dark" type="submit">
+                            Filter
+                        </button>
+                    </div>
+
+                    <div class="col-md-1 d-grid">
+                        <a class="btn btn-outline-secondary" href="{{ route('book-copies.index') }}">
+                            Clear
+                        </a>
                     </div>
                 </form>
             </div>

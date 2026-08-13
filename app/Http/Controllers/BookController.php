@@ -15,21 +15,51 @@ class BookController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $categoryId = $request->input('category_id');
+        $authorId = $request->input('author_id');
+        $publisherId = $request->input('publisher_id');
 
-        $books = Book::with(['category', 'publisher', 'authors'])
+        $books = Book::with([
+            'category',
+            'publisher',
+            'authors',
+        ])
             ->when($search, function ($query, $search) {
                 $query->where(function ($bookQuery) use ($search) {
                     $bookQuery->where('title', 'like', '%' . $search . '%')
                         ->orWhere('isbn', 'like', '%' . $search . '%');
                 });
             })
+            ->when($categoryId, function ($query, $categoryId) {
+                $query->where('category_id', $categoryId);
+            })
+            ->when($publisherId, function ($query, $publisherId) {
+                $query->where('publisher_id', $publisherId);
+            })
+            ->when($authorId, function ($query, $authorId) {
+                $query->whereHas('authors', function ($authorQuery) use ($authorId) {
+                    $authorQuery->where('authors.id', $authorId);
+                });
+            })
             ->latest()
             ->paginate(10)
             ->withQueryString();
 
-        return view('books.index', compact('books', 'search'));
-    }
+        $categories = Category::orderBy('name')->get();
+        $authors = Author::orderBy('name')->get();
+        $publishers = Publisher::orderBy('name')->get();
 
+        return view('books.index', compact(
+            'books',
+            'search',
+            'categoryId',
+            'authorId',
+            'publisherId',
+            'categories',
+            'authors',
+            'publishers'
+        ));
+    }
     public function create()
     {
         $categories = Category::orderBy('name')->get();

@@ -16,6 +16,7 @@ class BookIssueController extends Controller
 
     public function index(Request $request)
     {
+        $status = $request->input('status');
         $search = $request->input('search');
 
         $issues = BookIssue::with([
@@ -39,12 +40,27 @@ class BookIssueController extends Controller
                     });
                 });
             })
+
+            ->when($status === 'issued', function ($query) {
+                    $query->whereNull('returned_at')
+                        ->whereDate('due_at', '>=', now()->toDateString());
+                })
+                ->when($status === 'returned', function ($query) {
+                    $query->whereNotNull('returned_at');
+                })
+                ->when($status === 'overdue', function ($query) {
+                    $query->whereNull('returned_at')
+                        ->whereDate('due_at', '<', now()->toDateString());
+            })
             ->latest()
             ->paginate(10)
             ->withQueryString();
             $finePerDay = (float) Setting::getValue('fine_per_day', 5);
 
-        return view('book-issues.index', compact('issues', 'search', 'finePerDay'));
+        return view(
+            'book-issues.index',
+            compact('issues', 'search', 'status', 'finePerDay')
+        );
     }
 
     public function create()

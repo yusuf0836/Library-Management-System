@@ -44,18 +44,44 @@
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
                 <form method="GET" action="{{ route('book-issues.index') }}" class="row g-2">
-                    <div class="col-md-10">
+                    <div class="col-md-7">
                         <input
                             type="text"
                             name="search"
                             class="form-control"
                             value="{{ $search }}"
-                            placeholder="Search member, member code, book title, or accession number..."
+                            placeholder="Search member, member code, book, or accession number..."
                         >
                     </div>
 
-                    <div class="col-md-2 d-grid">
-                        <button class="btn btn-dark" type="submit">Search</button>
+                    <div class="col-md-3">
+                        <select name="status" class="form-select">
+                            <option value="">All Issue Status</option>
+
+                            <option value="issued" @selected($status === 'issued')>
+                                Currently Issued
+                            </option>
+
+                            <option value="returned" @selected($status === 'returned')>
+                                Returned
+                            </option>
+
+                            <option value="overdue" @selected($status === 'overdue')>
+                                Overdue
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-1 d-grid">
+                        <button class="btn btn-dark" type="submit">
+                            Filter
+                        </button>
+                    </div>
+
+                    <div class="col-md-1 d-grid">
+                        <a class="btn btn-outline-secondary" href="{{ route('book-issues.index') }}">
+                            Clear
+                        </a>
                     </div>
                 </form>
             </div>

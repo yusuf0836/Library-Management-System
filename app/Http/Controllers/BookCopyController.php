@@ -12,6 +12,7 @@ class BookCopyController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $status = $request->input('status');
 
         $copies = BookCopy::with('book')
             ->when($search, function ($query, $search) {
@@ -23,11 +24,14 @@ class BookCopyController extends Controller
                         });
                 });
             })
+            ->when($status, function ($query, $status) {
+                $query->where('status', $status);
+            })
             ->latest()
             ->paginate(10)
             ->withQueryString();
 
-        return view('book-copies.index', compact('copies', 'search'));
+        return view('book-copies.index', compact('copies', 'search', 'status'));
     }
 
     public function create()
