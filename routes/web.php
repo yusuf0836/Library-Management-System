@@ -76,6 +76,12 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::get('reports/overdue', [ReportController::class, 'overdue'])
         ->name('reports.overdue');
 
+    Route::get('reports/circulation', [ReportController::class, 'circulation'])
+        ->name('reports.circulation');
+
+    Route::get('reports/circulation/export', [ReportController::class, 'exportCirculation'])
+        ->name('reports.circulation.export');
+
     Route::get('/profile', [ProfileController::class, 'edit'])
     ->name('profile.edit');
 

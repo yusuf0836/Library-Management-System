@@ -368,6 +368,19 @@
                         </div>
                     </div>
                 @endif
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="card nav-card h-100 shadow-sm">
+                        <a href="{{ route('reports.circulation') }}">
+                            <div class="card-body">
+                                <h5>📊 Reports</h5>
+                                <p class="text-muted mb-0 small">
+                                    Circulation reports and CSV export.
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
 
             {{-- Recent Issues --}}
