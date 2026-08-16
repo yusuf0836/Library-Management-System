@@ -246,6 +246,28 @@
                 </div>
             </div>
 
+            <div class="row g-4 mb-5">
+                <div class="col-lg-5">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <h5 class="mb-3">Book Copy Status</h5>
+
+                            <canvas id="copyStatusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <h5 class="mb-3">Monthly Book Issue Activity</h5>
+
+                            <canvas id="monthlyIssueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- Navigation Modules --}}
             <h4 class="mb-3">Library Modules</h4>
 
@@ -444,5 +466,67 @@
 
         @endif
     </main>
+    {{-- Chart.js CDN for Admin and Librarian Dashboard Charts --}}
+    @if (auth()->user()->role !== 'member')
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            const copyStatusContext = document
+                .getElementById('copyStatusChart');
+
+            new Chart(copyStatusContext, {
+                type: 'doughnut',
+                data: {
+                    labels: @json($copyStatusLabels),
+                    datasets: [{
+                        data: @json($copyStatusData),
+                        backgroundColor: [
+                            '#198754',
+                            '#0d6efd',
+                            '#ffc107',
+                            '#dc3545',
+                            '#6c757d'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            const monthlyIssueContext = document
+                .getElementById('monthlyIssueChart');
+
+            new Chart(monthlyIssueContext, {
+                type: 'bar',
+                data: {
+                    labels: @json($monthlyIssueLabels),
+                    datasets: [{
+                        label: 'Books Issued',
+                        data: @json($monthlyIssueCounts),
+                        backgroundColor: '#1d4ed8',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    @endif
 </body>
 </html>

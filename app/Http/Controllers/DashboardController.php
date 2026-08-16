@@ -78,6 +78,51 @@ class DashboardController extends Controller
             ->take(6)
             ->get();
 
+
+        $copyStatusStats = BookCopy::select(
+            'status',
+            DB::raw('COUNT(*) as total')
+        )
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $chartStatuses = [
+            'available',
+            'issued',
+            'reserved',
+            'lost',
+            'damaged',
+        ];
+
+        $copyStatusLabels = collect($chartStatuses)
+            ->map(fn ($status) => ucfirst($status))
+            ->toArray();
+
+        $copyStatusData = collect($chartStatuses)
+            ->map(fn ($status) => $copyStatusStats[$status] ?? 0)
+            ->toArray();
+
+        $monthlyIssueData = BookIssue::select(
+            DB::raw("DATE_FORMAT(issued_at, '%Y-%m') as month"),
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereDate('issued_at', '>=', now()->subMonths(5)->startOfMonth())
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month');
+
+        $monthlyIssueLabels = [];
+        $monthlyIssueCounts = [];
+
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+
+            $monthKey = $date->format('Y-m');
+
+            $monthlyIssueLabels[] = $date->format('M Y');
+
+            $monthlyIssueCounts[] = $monthlyIssueData[$monthKey] ?? 0;
+        }
         return view('dashboard.index', compact(
             'totalBooks',
             'availableCopies',
@@ -85,7 +130,11 @@ class DashboardController extends Controller
             'activeMembers',
             'overdueIssues',
             'outstandingFine',
-            'recentIssues'
+            'recentIssues',
+            'copyStatusLabels',
+            'copyStatusData',
+            'monthlyIssueLabels',
+            'monthlyIssueCounts',
         ));
     }
 }
