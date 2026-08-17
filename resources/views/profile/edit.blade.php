@@ -123,6 +123,99 @@
                             @enderror
                         </div>
 
+                        @if ($user->role === 'member' && $user->member)
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">Library Membership Information</h6>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Member Code</label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="{{ $user->member->member_code }}"
+                                        readonly
+                                    >
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Membership Status</label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="{{ $user->member->is_active ? 'Active' : 'Inactive' }}"
+                                        readonly
+                                    >
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Department</label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="{{ $user->member->department ?: 'N/A' }}"
+                                        readonly
+                                    >
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Joining Date</label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="{{ $user->member->joined_at->format('d M, Y') }}"
+                                        readonly
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">
+                                    Phone Number
+                                </label>
+
+                                <input
+                                    id="phone"
+                                    type="text"
+                                    name="phone"
+                                    class="form-control @error('phone') is-invalid @enderror"
+                                    value="{{ old('phone', $user->member->phone) }}"
+                                    placeholder="01XXXXXXXXX"
+                                >
+
+                                @error('phone')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="address" class="form-label">
+                                    Address
+                                </label>
+
+                                <textarea
+                                    id="address"
+                                    name="address"
+                                    class="form-control @error('address') is-invalid @enderror"
+                                    rows="3"
+                                    placeholder="Write your address..."
+                                >{{ old('address', $user->member->address) }}</textarea>
+
+                                @error('address')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        @endif
+
                         <div class="mb-4">
                             <label class="form-label">Account Role</label>
 

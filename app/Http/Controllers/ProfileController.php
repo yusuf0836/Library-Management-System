@@ -14,7 +14,11 @@ class ProfileController extends Controller
      */
     public function edit()
     {
-        return view('profile.edit');
+        $user = auth()->user();
+
+        $user->load('member');
+
+        return view('profile.edit', compact('user'));
     }
 
     /**
@@ -24,7 +28,7 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        $validated = $request->validate([
+        $rules = [
             'name' => ['required', 'string', 'max:150'],
             'email' => [
                 'required',
@@ -33,7 +37,17 @@ class ProfileController extends Controller
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
             'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-        ]);
+        ];
+
+        /*
+        * Members can update their own phone number and address.
+        */
+        if ($user->role === 'member') {
+            $rules['phone'] = ['nullable', 'string', 'max:30'];
+            $rules['address'] = ['nullable', 'string', 'max:255'];
+        }
+
+        $validated = $request->validate($rules);
 
         $data = [
             'name' => $validated['name'],
@@ -50,6 +64,16 @@ class ProfileController extends Controller
         }
 
         $user->update($data);
+
+        /*
+        * Update Member-specific profile information.
+        */
+        if ($user->role === 'member' && $user->member) {
+            $user->member->update([
+                'phone' => $validated['phone'] ?? null,
+                'address' => $validated['address'] ?? null,
+            ]);
+        }
 
         return redirect()
             ->route('profile.edit')
