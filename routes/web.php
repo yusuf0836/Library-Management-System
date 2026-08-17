@@ -26,6 +26,15 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/profile', [ProfileController::class, 'edit'])
+    ->name('profile.edit');
+
+    Route::put('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
+        ->name('profile.password');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -81,15 +90,6 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
     Route::get('reports/circulation/export', [ReportController::class, 'exportCirculation'])
         ->name('reports.circulation.export');
-
-    Route::get('/profile', [ProfileController::class, 'edit'])
-    ->name('profile.edit');
-
-    Route::put('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
-        ->name('profile.password');
 });
 
 Route::middleware(['auth', 'role:member'])->group(function () {

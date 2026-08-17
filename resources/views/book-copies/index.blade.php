@@ -1,29 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Copies | Library Management System</title>
+@extends('layouts.app')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-dark" style="background:#1e3a8a;">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">
-                Library Management System
-            </a>
+@section('title', 'Book Copies | Library Management System')
+@section('page-title', 'Book Copies')
+@section('page-subtitle', 'Manage physical copies, shelves, and availability')
 
-            <a class="btn btn-outline-light btn-sm" href="{{ route('dashboard') }}">
-                Dashboard
-            </a>
-        </div>
-    </nav>
-
-    <main class="container py-4">
+@section('content')
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
                 <h2 class="mb-1">Book Copies</h2>
@@ -189,6 +170,4 @@
                 @endif
             </div>
         @endif
-    </main>
-</body>
-</html>
+@endsection

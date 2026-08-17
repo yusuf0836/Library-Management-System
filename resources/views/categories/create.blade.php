@@ -1,148 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Category | Library Management System</title>
+@extends('layouts.app')
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+@section('title', 'Add Category | Library Management System')
+@section('page-title', 'Add Book Category')
+@section('page-subtitle', 'Create a new category for organizing books')
 
-        body {
-            margin: 0;
-            background: #f8fafc;
-            color: #0f172a;
-            font-family: Arial, sans-serif;
-        }
+@section('content')
+    <div class="row">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form action="{{ route('categories.store') }}" method="POST">
+                        @csrf
 
-        .navbar {
-            padding: 16px 8%;
-            background: #1e3a8a;
-            color: white;
-        }
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                Category Name <span class="text-danger">*</span>
+                            </label>
 
-        .container {
-            max-width: 700px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+                            <input
+                                id="name"
+                                type="text"
+                                name="name"
+                                class="form-control @error('name') is-invalid @enderror"
+                                value="{{ old('name') }}"
+                                placeholder="Example: Computer Science"
+                                required
+                            >
 
-        .card {
-            padding: 30px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
-        }
+                            @error('name')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
 
-        h1 {
-            margin-top: 0;
-            color: #1e3a8a;
-        }
+                        <div class="mb-4">
+                            <label for="description" class="form-label">
+                                Description
+                            </label>
 
-        label {
-            display: block;
-            margin: 18px 0 7px;
-            font-weight: bold;
-            font-size: 14px;
-        }
+                            <textarea
+                                id="description"
+                                name="description"
+                                class="form-control @error('description') is-invalid @enderror"
+                                rows="5"
+                                placeholder="Write a short category description..."
+                            >{{ old('description') }}</textarea>
 
-        input,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 7px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-        }
+                            @error('description')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
 
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
+                        <button class="btn btn-primary" type="submit">
+                            Save Category
+                        </button>
 
-        input:focus,
-        textarea:focus {
-            border-color: #2563eb;
-            outline: none;
-        }
-
-        .error {
-            margin-top: 6px;
-            color: #dc2626;
-            font-size: 13px;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 24px;
-        }
-
-        .button {
-            padding: 11px 16px;
-            border: none;
-            border-radius: 7px;
-            background: #1d4ed8;
-            color: white;
-            font-weight: bold;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .cancel {
-            background: #64748b;
-        }
-    </style>
-</head>
-<body>
-    <header class="navbar">
-        <strong>Library Management System</strong>
-    </header>
-
-    <main class="container">
-        <section class="card">
-            <h1>Add New Category</h1>
-
-            <form action="{{ route('categories.store') }}" method="POST">
-                @csrf
-
-                <label for="name">Category Name <span style="color:red">*</span></label>
-                <input
-                    id="name"
-                    type="text"
-                    name="name"
-                    value="{{ old('name') }}"
-                    placeholder="Example: Computer Science"
-                    required
-                >
-
-                @error('name')
-                    <div class="error">{{ $message }}</div>
-                @enderror
-
-                <label for="description">Description</label>
-                <textarea
-                    id="description"
-                    name="description"
-                    placeholder="Write a short category description..."
-                >{{ old('description') }}</textarea>
-
-                @error('description')
-                    <div class="error">{{ $message }}</div>
-                @enderror
-
-                <div class="buttons">
-                    <button class="button" type="submit">Save Category</button>
-
-                    <a class="button cancel" href="{{ route('categories.index') }}">
-                        Cancel
-                    </a>
+                        <a
+                            class="btn btn-outline-secondary"
+                            href="{{ route('categories.index') }}"
+                        >
+                            Cancel
+                        </a>
+                    </form>
                 </div>
-            </form>
-        </section>
-    </main>
-</body>
-</html>
+            </div>
+        </div>
+    </div>
+@endsection

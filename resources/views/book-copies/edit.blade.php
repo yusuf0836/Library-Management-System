@@ -1,23 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Book Copy | Library Management System</title>
+@extends('layouts.app')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-dark" style="background:#1e3a8a;">
-        <div class="container">
-            <span class="navbar-brand mb-0 h1">Library Management System</span>
-        </div>
-    </nav>
+@section('title', 'Edit Book Copy | Library Management System')
+@section('page-title', 'Edit Book Copy')
+@section('page-subtitle', 'Update book copy and availability details')
 
-    <main class="container py-4">
+@section('content')
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
                 <h2 class="mb-1">Edit Book Copy</h2>
@@ -43,6 +30,4 @@
                 </form>
             </div>
         </div>
-    </main>
-</body>
-</html>
+@endsection

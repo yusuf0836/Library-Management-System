@@ -1,258 +1,267 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Issue & Return | Library Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-dark" style="background:#1e3a8a;">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">
-                Library Management System
-            </a>
+@extends('layouts.app')
 
-            <a class="btn btn-outline-light btn-sm" href="{{ route('dashboard') }}">
-                Dashboard
-            </a>
-        </div>
-    </nav>
+@section('title', 'Issue & Return | Library Management System')
+@section('page-title', 'Book Issue & Return')
+@section('page-subtitle', 'Manage borrowed books, returns, due dates, and overdue records')
 
-    <main class="container py-4">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-            <div>
-                <h2 class="mb-1">Book Issue & Return</h2>
-                <p class="text-muted mb-0">
-                    Manage borrowed books, return dates, and overdue fines.
-                </p>
-            </div>
-
-            <a class="btn btn-primary" href="{{ route('book-issues.create') }}">
-                + Issue Book
-            </a>
+@section('content')
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h4 class="mb-1">Circulation Records</h4>
+            <p class="text-muted mb-0">
+                Issue books to members and process returned books.
+            </p>
         </div>
 
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+        <a class="btn btn-primary" href="{{ route('book-issues.create') }}">
+            + Issue Book
+        </a>
+    </div>
 
-        @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ route('book-issues.index') }}" class="row g-2">
+                <div class="col-md-7">
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        value="{{ $search }}"
+                        placeholder="Search member, member code, book, or accession number..."
+                    >
+                </div>
 
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-body">
-                <form method="GET" action="{{ route('book-issues.index') }}" class="row g-2">
-                    <div class="col-md-7">
-                        <input
-                            type="text"
-                            name="search"
-                            class="form-control"
-                            value="{{ $search }}"
-                            placeholder="Search member, member code, book, or accession number..."
-                        >
-                    </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">All Issue Status</option>
 
-                    <div class="col-md-3">
-                        <select name="status" class="form-select">
-                            <option value="">All Issue Status</option>
+                        <option value="issued" @selected($status === 'issued')>
+                            Currently Issued
+                        </option>
 
-                            <option value="issued" @selected($status === 'issued')>
-                                Currently Issued
-                            </option>
+                        <option value="returned" @selected($status === 'returned')>
+                            Returned
+                        </option>
 
-                            <option value="returned" @selected($status === 'returned')>
-                                Returned
-                            </option>
+                        <option value="overdue" @selected($status === 'overdue')>
+                            Overdue
+                        </option>
+                    </select>
+                </div>
 
-                            <option value="overdue" @selected($status === 'overdue')>
-                                Overdue
-                            </option>
-                        </select>
-                    </div>
+                <div class="col-md-1 d-grid">
+                    <button class="btn btn-dark" type="submit">
+                        Filter
+                    </button>
+                </div>
 
-                    <div class="col-md-1 d-grid">
-                        <button class="btn btn-dark" type="submit">
-                            Filter
-                        </button>
-                    </div>
-
-                    <div class="col-md-1 d-grid">
-                        <a class="btn btn-outline-secondary" href="{{ route('book-issues.index') }}">
-                            Clear
-                        </a>
-                    </div>
-                </form>
-            </div>
+                <div class="col-md-1 d-grid">
+                    <a
+                        class="btn btn-outline-secondary"
+                        href="{{ route('book-issues.index') }}"
+                    >
+                        Clear
+                    </a>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <div class="card shadow-sm border-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-primary">
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Member</th>
+                        <th>Book Copy</th>
+                        <th>Issue Date</th>
+                        <th>Due Date</th>
+                        <th>Return Date</th>
+                        <th>Status</th>
+                        <th>Fine</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($issues as $issue)
                         <tr>
-                            <th>Member</th>
-                            <th>Book Copy</th>
-                            <th>Issue Date</th>
-                            <th>Due Date</th>
-                            <th>Return Date</th>
-                            <th>Status</th>
-                            <th>Fine</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+                            <td>
+                                <strong>{{ $issue->member->user->name }}</strong>
+                                <br>
 
-                    <tbody>
-                        @forelse ($issues as $issue)
-                            <tr>
-                                <td>
-                                    <strong>{{ $issue->member->user->name }}</strong>
-                                    <br>
-                                    <small class="text-muted">
-                                        {{ $issue->member->member_code }}
-                                    </small>
-                                </td>
+                                <small class="text-muted">
+                                    {{ $issue->member->member_code }}
+                                </small>
+                            </td>
 
-                                <td>
-                                    <strong>{{ $issue->copy->book->title }}</strong>
-                                    <br>
-                                    <small class="text-muted">
-                                        {{ $issue->copy->accession_number }}
-                                    </small>
-                                </td>
+                            <td>
+                                <strong>{{ $issue->copy->book->title }}</strong>
+                                <br>
 
-                                <td>{{ $issue->issued_at->format('d M, Y') }}</td>
-                                <td>{{ $issue->due_at->format('d M, Y') }}</td>
+                                <small class="text-muted">
+                                    {{ $issue->copy->accession_number }}
+                                </small>
+                            </td>
 
-                                <td>
-                                    {{ $issue->returned_at?->format('d M, Y') ?? 'Not Returned' }}
-                                </td>
+                            <td>{{ $issue->issued_at->format('d M, Y') }}</td>
+                            <td>{{ $issue->due_at->format('d M, Y') }}</td>
 
-                                <td>
-                                    @if ($issue->status === 'returned')
-                                        <span class="badge bg-success">Returned</span>
-                                    @elseif (now()->startOfDay()->greaterThan($issue->due_at))
-                                        <span class="badge bg-danger">Overdue</span>
-                                    @else
-                                        <span class="badge bg-primary">Issued</span>
-                                    @endif
-                                </td>
+                            <td>
+                                {{ $issue->returned_at?->format('d M, Y') ?? 'Not Returned' }}
+                            </td>
 
-                                <td>
-                                    @if ($issue->fine)
+                            <td>
+                                @if ($issue->status === 'returned')
+                                    <span class="badge bg-success">Returned</span>
+                                @elseif (now()->startOfDay()->greaterThan($issue->due_at))
+                                    <span class="badge bg-danger">Overdue</span>
+                                @else
+                                    <span class="badge bg-primary">Issued</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if ($issue->fine)
+                                    <strong>
                                         ৳{{ number_format($issue->fine->amount, 2) }}
-                                        <br>
-                                        <small class="text-danger">
-                                            {{ ucfirst($issue->fine->status) }}
-                                        </small>
-                                    @else
-                                        —
-                                    @endif
-                                </td>
+                                    </strong>
+                                    <br>
 
-                                <td>
-                                    @if ($issue->status !== 'returned')
-                                        <button
-                                            class="btn btn-sm btn-outline-success"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#returnModal{{ $issue->id }}"
-                                        >
-                                            Return
-                                        </button>
+                                    <small
+                                        class="{{ $issue->fine->status === 'paid' ? 'text-success' : 'text-danger' }}"
+                                    >
+                                        {{ ucfirst($issue->fine->status) }}
+                                    </small>
+                                @else
+                                    —
+                                @endif
+                            </td>
 
-                                        <div
-                                            class="modal fade"
-                                            id="returnModal{{ $issue->id }}"
-                                            tabindex="-1"
-                                        >
-                                            <div class="modal-dialog">
-                                                <form
-                                                    action="{{ route('book-issues.return', $issue) }}"
-                                                    method="POST"
-                                                >
-                                                    @csrf
+                            <td class="text-end">
+                                @if ($issue->status !== 'returned')
+                                    <button
+                                        class="btn btn-sm btn-outline-success"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#returnModal{{ $issue->id }}"
+                                    >
+                                        Return Book
+                                    </button>
 
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Return Book</h5>
+                                    <div
+                                        class="modal fade"
+                                        id="returnModal{{ $issue->id }}"
+                                        tabindex="-1"
+                                    >
+                                        <div class="modal-dialog">
+                                            <form
+                                                action="{{ route('book-issues.return', $issue) }}"
+                                                method="POST"
+                                            >
+                                                @csrf
 
-                                                            <button
-                                                                type="button"
-                                                                class="btn-close"
-                                                                data-bs-dismiss="modal"
-                                                            ></button>
-                                                        </div>
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">
+                                                            Return Book
+                                                        </h5>
 
-                                                        <div class="modal-body">
-                                                            <p>
-                                                                <strong>{{ $issue->copy->book->title }}</strong>
-                                                            </p>
+                                                        <button
+                                                            type="button"
+                                                            class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                        ></button>
+                                                    </div>
 
-                                                            <label class="form-label">
-                                                                Return Date
-                                                            </label>
+                                                    <div class="modal-body">
+                                                        <p class="mb-1">
+                                                            <strong>
+                                                                {{ $issue->copy->book->title }}
+                                                            </strong>
+                                                        </p>
 
-                                                            <input
-                                                                type="date"
-                                                                name="returned_at"
-                                                                class="form-control"
-                                                                value="{{ date('Y-m-d') }}"
-                                                                min="{{ $issue->issued_at->format('Y-m-d') }}"
-                                                                required
-                                                            >
+                                                        <p class="text-muted small">
+                                                            Accession Number:
+                                                            {{ $issue->copy->accession_number }}
+                                                        </p>
 
-                                                            <label class="form-label mt-3">
-                                                                Return Notes
-                                                            </label>
+                                                        <label
+                                                            for="returned_at{{ $issue->id }}"
+                                                            class="form-label"
+                                                        >
+                                                            Return Date
+                                                        </label>
 
-                                                            <textarea
-                                                                name="notes"
-                                                                class="form-control"
-                                                                rows="3"
-                                                                placeholder="Optional notes..."
-                                                            ></textarea>
+                                                        <input
+                                                            id="returned_at{{ $issue->id }}"
+                                                            type="date"
+                                                            name="returned_at"
+                                                            class="form-control"
+                                                            value="{{ date('Y-m-d') }}"
+                                                            min="{{ $issue->issued_at->format('Y-m-d') }}"
+                                                            required
+                                                        >
 
-                                                            <small class="text-muted d-block mt-2">
-                                                                Fine rate: ৳{{ number_format($finePerDay, 2) }} per overdue day.
-                                                            </small>
-                                                        </div>
+                                                        <label
+                                                            for="notes{{ $issue->id }}"
+                                                            class="form-label mt-3"
+                                                        >
+                                                            Return Notes
+                                                        </label>
 
-                                                        <div class="modal-footer">
-                                                            <button
-                                                                type="button"
-                                                                class="btn btn-secondary"
-                                                                data-bs-dismiss="modal"
-                                                            >
-                                                                Cancel
-                                                            </button>
+                                                        <textarea
+                                                            id="notes{{ $issue->id }}"
+                                                            name="notes"
+                                                            class="form-control"
+                                                            rows="3"
+                                                            placeholder="Optional notes..."
+                                                        ></textarea>
 
-                                                            <button class="btn btn-success" type="submit">
-                                                                Confirm Return
-                                                            </button>
+                                                        <div class="alert alert-info mt-3 mb-0">
+                                                            Fine rate:
+                                                            <strong>
+                                                                ৳{{ number_format($finePerDay, 2) }}
+                                                            </strong>
+                                                            per overdue day.
                                                         </div>
                                                     </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    @else
-                                        <span class="text-muted">Completed</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">
-                                    No book issue record found.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+                                                    <div class="modal-footer">
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-outline-secondary"
+                                                            data-bs-dismiss="modal"
+                                                        >
+                                                            Cancel
+                                                        </button>
+
+                                                        <button
+                                                            class="btn btn-success"
+                                                            type="submit"
+                                                        >
+                                                            Confirm Return
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @else
+                                    <span class="text-muted small">
+                                        Completed
+                                    </span>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="py-5 text-center text-muted">
+                                No book issue record found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+@endsection

@@ -1,71 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Publisher | Library Management System</title>
+@extends('layouts.app')
 
-    <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; background: #f8fafc; color: #0f172a; font-family: Arial, sans-serif; }
-        .navbar { padding: 16px 8%; background: #1e3a8a; color: white; }
-        .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
-        .card { padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(15, 23, 42, .08); }
-        h1 { margin-top: 0; color: #1e3a8a; }
-        label { display: block; margin: 18px 0 7px; font-size: 14px; font-weight: bold; }
-        input, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 7px; font-family: Arial, sans-serif; font-size: 14px; }
-        textarea { min-height: 100px; resize: vertical; }
-        input:focus, textarea:focus { border-color: #2563eb; outline: none; }
-        .error { margin-top: 6px; color: #dc2626; font-size: 13px; }
-        .buttons { display: flex; gap: 10px; margin-top: 24px; }
-        .button { padding: 11px 16px; border: none; border-radius: 7px; background: #1d4ed8; color: white; font-weight: bold; text-decoration: none; cursor: pointer; }
-        .cancel { background: #64748b; }
-    </style>
-</head>
-<body>
-    <header class="navbar"><strong>Library Management System</strong></header>
+@section('title', 'Add Publisher | Library Management System')
+@section('page-title', 'Add New Publisher')
+@section('page-subtitle', 'Create a publisher record for books')
 
-    <main class="container">
-        <section class="card">
-            <h1>Add New Publisher</h1>
+@section('content')
+    <div class="row">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form action="{{ route('publishers.store') }}" method="POST">
+                        @csrf
 
-            <form action="{{ route('publishers.store') }}" method="POST">
-                @csrf
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                Publisher Name <span class="text-danger">*</span>
+                            </label>
 
-                <label for="name">Publisher Name <span style="color:red">*</span></label>
-                <input id="name" type="text" name="name" value="{{ old('name') }}" required>
+                            <input
+                                id="name"
+                                type="text"
+                                name="name"
+                                class="form-control @error('name') is-invalid @enderror"
+                                value="{{ old('name') }}"
+                                placeholder="Example: Academic Press"
+                                required
+                            >
 
-                @error('name')
-                    <div class="error">{{ $message }}</div>
-                @enderror
+                            @error('name')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
 
-                <label for="email">Email Address</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">
+                                    Email Address
+                                </label>
 
-                @error('email')
-                    <div class="error">{{ $message }}</div>
-                @enderror
+                                <input
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    class="form-control @error('email') is-invalid @enderror"
+                                    value="{{ old('email') }}"
+                                    placeholder="publisher@example.com"
+                                >
 
-                <label for="phone">Phone Number</label>
-                <input id="phone" type="text" name="phone" value="{{ old('phone') }}">
+                                @error('email')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
 
-                @error('phone')
-                    <div class="error">{{ $message }}</div>
-                @enderror
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">
+                                    Phone Number
+                                </label>
 
-                <label for="address">Address</label>
-                <textarea id="address" name="address">{{ old('address') }}</textarea>
+                                <input
+                                    id="phone"
+                                    type="text"
+                                    name="phone"
+                                    class="form-control @error('phone') is-invalid @enderror"
+                                    value="{{ old('phone') }}"
+                                    placeholder="01XXXXXXXXX"
+                                >
 
-                @error('address')
-                    <div class="error">{{ $message }}</div>
-                @enderror
+                                @error('phone')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
 
-                <div class="buttons">
-                    <button class="button" type="submit">Save Publisher</button>
-                    <a class="button cancel" href="{{ route('publishers.index') }}">Cancel</a>
+                        <div class="mt-3 mb-4">
+                            <label for="address" class="form-label">
+                                Address
+                            </label>
+
+                            <textarea
+                                id="address"
+                                name="address"
+                                class="form-control @error('address') is-invalid @enderror"
+                                rows="4"
+                                placeholder="Write publisher address..."
+                            >{{ old('address') }}</textarea>
+
+                            @error('address')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">
+                            Save Publisher
+                        </button>
+
+                        <a
+                            class="btn btn-outline-secondary"
+                            href="{{ route('publishers.index') }}"
+                        >
+                            Cancel
+                        </a>
+                    </form>
                 </div>
-            </form>
-        </section>
-    </main>
-</body>
-</html>
+            </div>
+        </div>
+    </div>
+@endsection

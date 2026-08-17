@@ -1,27 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Book | Library Management System</title>
+@extends('layouts.app')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-dark" style="background:#1e3a8a;">
-        <div class="container">
-            <span class="navbar-brand mb-0 h1">Library Management System</span>
-        </div>
-    </nav>
+@section('title', 'Add Book | Library Management System')
+@section('page-title', 'Add New Book')
+@section('page-subtitle', 'Add a new book to the library catalog')
 
-    <main class="container py-4">
+@section('content')
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
-                <h2 class="mb-1">Add New Book</h2>
-                <p class="text-muted mb-4">Enter the book information below.</p>
 
                 <form
                     action="{{ route('books.store') }}"
@@ -212,6 +197,4 @@
                 </form>
             </div>
         </div>
-    </main>
-</body>
-</html>
+@endsection

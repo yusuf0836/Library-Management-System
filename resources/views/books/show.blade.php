@@ -1,29 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $book->title }} | Library Management System</title>
+@extends('layouts.app')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-dark" style="background:#1e3a8a;">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">
-                Library Management System
-            </a>
+@section('title', $book->title . ' | Library Management System')
+@section('page-title', 'Book Details')
+@section('page-subtitle', 'Complete book information and copy availability')
 
-            <a class="btn btn-outline-light btn-sm" href="{{ route('books.index') }}">
-                Back to Books
-            </a>
-        </div>
-    </nav>
-
-    <main class="container py-4">
+@section('content')
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
                 <div class="row g-4">
@@ -183,6 +164,4 @@
                 </div>
             </div>
         </div>
-    </main>
-</body>
-</html>
+@endsection
