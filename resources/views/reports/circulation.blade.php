@@ -14,13 +14,9 @@
         </div>
 
         <a
+            href="/reports/circulation/export"
             class="btn btn-success"
-            href="{{ route('reports.circulation.export', [
-                'start_date' => request('start_date'),
-                'end_date' => request('end_date'),
-                'status' => request('status'),
-            ]) }}"
-            download
+            target="_blank"
         >
             Download CSV
         </a>
